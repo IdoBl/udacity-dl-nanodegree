@@ -2,6 +2,12 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
+# Mean sum errors function
+def MSE(y, Y):
+    return np.mean((y-Y)**2)
+
+
 # import the data and prepare for use
 data_path = 'Bike-Sharing-Dataset/hour.csv'
 rides = pd.read_csv(data_path)
