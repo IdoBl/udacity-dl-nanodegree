@@ -69,7 +69,7 @@ class NeuralNetwork(object):
         '''
 
         # Output error
-        error = y - final_outputs  # Output layer error is the difference between desired target and actual output.
+        error = y - final_outputs
         # Backpropagated error terms
         output_error_term = error * 1  # Derivative of identity function is 1
 
@@ -78,9 +78,9 @@ class NeuralNetwork(object):
         hidden_error_term = hidden_error * hidden_outputs * (1 - hidden_outputs)
 
         # Weight step (input to hidden)
-        delta_weights_i_h += learning_rate * hidden_error_term * X[:, None]
+        delta_weights_i_h += hidden_error_term * X[:, None]
         # Weight step (hidden to output)
-        delta_weights_h_o += learning_rate * output_error_term * hidden_outputs[:, None]
+        delta_weights_h_o += output_error_term * hidden_outputs[:, None]
         return delta_weights_i_h, delta_weights_h_o
 
     def update_weights(self, delta_weights_i_h, delta_weights_h_o, n_records):
@@ -94,9 +94,9 @@ class NeuralNetwork(object):
 
         '''
         # update hidden-to-output weights with gradient descent step
-        self.weights_hidden_to_output += learning_rate * delta_weights_h_o / n_records
+        self.weights_hidden_to_output += self.lr * delta_weights_h_o / n_records
         # update input-to-hidden weights with gradient descent step
-        self.weights_input_to_hidden += learning_rate * delta_weights_i_h / n_records
+        self.weights_input_to_hidden += self.lr * delta_weights_i_h / n_records
 
     def run(self, features):
         ''' Run a forward pass through the network with input features
@@ -110,16 +110,15 @@ class NeuralNetwork(object):
         hidden_outputs = self.activation_function(hidden_inputs)  # signals from hidden layer
 
         # TODO: Output layer - Replace these values with the appropriate calculations.
-        final_inputs = None  # signals into final output layer
-        final_outputs = None  # signals from final output layer
-
+        final_inputs = np.dot(hidden_outputs, self.weights_hidden_to_output)
+        final_outputs = final_inputs  # Identity function as activation
         return final_outputs
 
 
 #########################################################
 # Set your hyperparameters here
 ##########################################################
-iterations = 100
-learning_rate = 0.1
-hidden_nodes = 2
+iterations = 3000
+learning_rate = 0.6
+hidden_nodes = 20
 output_nodes = 1
