@@ -1,25 +1,16 @@
 """
 This script builds and runs a graph with miniflow.
-
-There is no need to change anything to solve this quiz!
-
-However, feel free to play with the network! Can you also
-build a network that solves the equation below?
-
-(x + y) + y
 """
-
 from miniflow import *
 
-x, y = Input(), Input()
+w, x, y, z = Input(), Input(), Input(), Input()
 
-f = Add(x, y)
-g = Add(f, y)
-feed_dict = {x: 10, y: 5}
+f = Add(w, x, y, z)
 
-sorted_nodes = topological_sort(feed_dict)
-output = forward_pass(f, sorted_nodes)
+feed_dict = {w: 2, x: 4, y: 5, z: 10}
 
-# NOTE: because topological_sort set the values for the `Input` nodes we could also access
-# the value for x with x.value (same goes for y).
-print("{} + {} = {} (according to miniflow)".format(feed_dict[x], feed_dict[y], output))
+graph = topological_sort(feed_dict)
+output = forward_pass(f, graph)
+
+# should output 19
+print("{} + {} + {} + {} = {} (according to miniflow)".format(feed_dict[w], feed_dict[x], feed_dict[y], feed_dict[z], output))
