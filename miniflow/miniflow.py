@@ -30,7 +30,7 @@ class Input(Node):
     def __init__(self):
         # an Input node has no inbound nodes,
         # so no need to pass anything to the Node instantiator
-        super().__init__()
+        Node.__init__(self)
 
     # NOTE: Input node is the only node that may
     # receive its value as an argument to forward().
@@ -48,7 +48,7 @@ class Input(Node):
 
 class Add(Node):
     def __init__(self, *inputs):
-        super().__init__(inputs)
+        Node.__init__(inputs)
         self.value = 0
 
     def forward(self):
@@ -58,6 +58,39 @@ class Add(Node):
         for node in self.inbound_nodes:
             self.value += node.value
         # self.value = self.inbound_nodes[0].value + self.inbound_nodes[1].value
+
+
+class Linear(Node):
+    def __init__(self, inputs, weights, bias):
+        Node.__init__(self, [inputs, weights, bias])
+
+        # NOTE: The weights and bias properties here are not
+        # numbers, but rather references to other nodes.
+        # The weight and bias values are stored within the
+        # respective nodes.
+
+    def forward(self):
+        """
+        Set self.value to the value of the linear function output.
+        """
+        inputs = self.inbound_nodes[0].value
+        weights = self.inbound_nodes[1].value
+        bias = self.inbound_nodes[2]
+        self.value = bias.value
+        for w, x in zip(weights, inputs):
+            self.value += w * x
+
+
+class LinearVec(Node):
+    def __init__(self, X, W, b):
+        # Notice the ordering of the input nodes passed to the
+        # Node constructor.
+        Node.__init__(self, [X, W, b])
+
+    def forward(self):
+        """
+        Set the value of this node to the linear transform output.
+        """
 
 
 """
