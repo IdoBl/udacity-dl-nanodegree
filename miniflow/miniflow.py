@@ -1,7 +1,7 @@
 """
 MiniFlow code
 """
-
+import numpy as np
 
 class Node(object):
     def __init__(self, inbound_nodes=[]):
@@ -48,7 +48,7 @@ class Input(Node):
 
 class Add(Node):
     def __init__(self, *inputs):
-        Node.__init__(inputs)
+        Node.__init__(self, list(inputs))
         self.value = 0
 
     def forward(self):
@@ -60,7 +60,7 @@ class Add(Node):
         # self.value = self.inbound_nodes[0].value + self.inbound_nodes[1].value
 
 
-class Linear(Node):
+class LinearVec(Node):
     def __init__(self, inputs, weights, bias):
         Node.__init__(self, [inputs, weights, bias])
 
@@ -81,7 +81,7 @@ class Linear(Node):
             self.value += w * x
 
 
-class LinearVec(Node):
+class LinearMat(Node):
     def __init__(self, X, W, b):
         # Notice the ordering of the input nodes passed to the
         # Node constructor.
@@ -91,6 +91,10 @@ class LinearVec(Node):
         """
         Set the value of this node to the linear transform output.
         """
+        X = self.inbound_nodes[0].value
+        W = self.inbound_nodes[1].value
+        bias = self.inbound_nodes[2].value
+        self.value = np.dot(X, W) + bias
 
 
 """
