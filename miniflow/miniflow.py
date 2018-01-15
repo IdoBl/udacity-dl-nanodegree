@@ -97,6 +97,30 @@ class LinearMat(Node):
         self.value = np.dot(X, W) + bias
 
 
+class Sigmoid(Node):
+    def __init__(self, node):
+        Node.__init__(self, [node])
+
+    def _sigmoid(self, x):
+        """
+        This method is separate from `forward` because it
+        will be used later with `backward` as well.
+
+        `x`: A numpy array-like object.
+
+        Return the result of the sigmoid function.
+        """
+        return 1. / (1. + np.exp(-x))  # the `.` ensures that `1` is a float
+
+    def forward(self):
+        """
+        Set the value of this node to the result of the
+        sigmoid function, `_sigmoid`.
+        """
+        linear_result = self.inbound_nodes[0].value  # The input value
+        self.value = self._sigmoid(linear_result)
+
+
 """
 MiniFlow Functions
 """
