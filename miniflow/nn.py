@@ -60,3 +60,25 @@ output = forward_pass(g, graph)
 # Output should be: [[  1.23394576e-04   9.82013790e-01]
 #                    [  1.23394576e-04   9.82013790e-01]]
 print(output)
+
+# ******************************************
+
+# Testing MSE method
+
+y, a = Input(), Input()
+cost = MSE(y, a)
+
+y_ = np.array([1, 2, 3])
+a_ = np.array([4.5, 5, 10])
+
+feed_dict = {y: y_, a: a_}
+graph = topological_sort(feed_dict)
+# forward pass
+forward_pass_mse(graph)
+
+"""
+Expected output
+
+23.4166666667
+"""
+print(cost.value)

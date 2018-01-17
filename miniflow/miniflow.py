@@ -121,6 +121,36 @@ class Sigmoid(Node):
         self.value = self._sigmoid(linear_result)
 
 
+class MSE(Node):
+    def __init__(self, y, a):
+        """
+        The mean squared error cost function.
+        Should be used as the last node for a network.
+        """
+        # Call the base class' constructor.
+        Node.__init__(self, [y, a])
+
+    def forward(self):
+        """
+        Calculates the mean squared error.
+        """
+        # NOTE: We reshape these to avoid possible matrix/vector broadcast
+        # errors.
+        #
+        # For example, if we subtract an array of shape (3,) from an array of shape
+        # (3,1) we get an array of shape(3,3) as the result when we want
+        # an array of shape (3,1) instead.
+        #
+        # Making both arrays (3,1) insures the result is (3,1) and does
+        # an elementwise subtraction as expected.
+        y = self.inbound_nodes[0].value.reshape(-1, 1)
+        a = self.inbound_nodes[1].value.reshape(-1, 1)
+        # One way:
+        # self.value = np.sum(np.square(y - a)) / y.shape[0]
+        # Another one:
+        diff = y - a
+        self.value = np.mean(diff ** 2)
+
 """
 MiniFlow Functions
 """
@@ -184,3 +214,16 @@ def forward_pass(output_node, sorted_nodes):
         n.forward()
 
     return output_node.value
+
+
+def forward_pass_mse(graph):
+    """
+    Performs a forward pass through a list of sorted Nodes.
+
+    Arguments:
+
+        `graph`: The result of calling `topological_sort`.
+    """
+    # Forward pass
+    for n in graph:
+        n.forward()
