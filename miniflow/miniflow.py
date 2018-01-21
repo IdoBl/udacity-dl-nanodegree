@@ -3,6 +3,7 @@ MiniFlow code
 """
 import numpy as np
 
+
 class Node(object):
     def __init__(self, inbound_nodes=[]):
         # Nodes from which this Node receives values
@@ -142,7 +143,7 @@ class MSE(Node):
         # an array of shape (3,1) instead.
         #
         # Making both arrays (3,1) insures the result is (3,1) and does
-        # an elementwise subtraction as expected.
+        # an element wise subtraction as expected.
         y = self.inbound_nodes[0].value.reshape(-1, 1)
         a = self.inbound_nodes[1].value.reshape(-1, 1)
         # One way:
